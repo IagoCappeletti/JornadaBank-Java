@@ -28,7 +28,7 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    //logar();
+                    logar();
                     break;
                 case 2:
                     registrarUsuario();
@@ -53,7 +53,17 @@ public class Main {
         System.out.println("Digite sua senha: ");
         String senha = input.next();
 
-        validaLogin(email, senha);
+        if (numUsers > 1) {
+            if (validaLogin(email, senha)) {
+                if (usuario[userId][4] == null) {
+                    criarConta();
+                } else {
+                    logado();
+                }
+            }
+        } else {
+            System.out.println("Usuário inválido!");
+        }
     }
 
     public static void registrarUsuario() {
@@ -80,19 +90,18 @@ public class Main {
         numUsers++;
 
         System.out.println("Usuário cadastrado com sucesso!");
-        System.out.println("CONTA => " + usuario[numUsers][4]);
     }
 
-    public static void validaLogin(String email, String senha) {
+    public static boolean validaLogin(String email, String senha) {
         for (int i = 1; i <= numUsers; i++) {
             if (usuario[i][2].equals(email) && usuario[i][3].equals(senha)) {
                 System.out.println("Bem vindo!!");
                 userId = i;
-
             } else {
                 System.out.println("E-mail ou senha inválidos!!");
             }
         }
+        return false;
     }
 
     public static boolean validaRegistro(String cpf, String email) {
@@ -106,7 +115,7 @@ public class Main {
     }
 
 
-    public void logado() {
+    public static void logado() {
         Scanner input = new Scanner(System.in);
         System.out.println("===== Jornada Bank =====");
         System.out.println("#1 - Fazer um depósito");
@@ -135,28 +144,8 @@ public class Main {
         }
     }
 
-    public void logadoSemConta() {
-        Scanner input = new Scanner(System.in);
-        System.out.println("===== Jornada Bank =====");
-        System.out.println("#1 - Criar uma conta");
-        System.out.println("#2 - Voltar");
-        System.out.println("==========================");
-        System.out.println("Qual opção você deseja acessar? ");
-        int opcao = input.nextInt();
-
-        switch (opcao) {
-            case 1:
-                //criarConta();
-                break;
-            case 2:
-                System.out.println("Retornando a página de login!!");
-                break;
-            default:
-                System.out.println("Opção inválida!");
-        }
-    }
-
     public static void criarConta() {
+
     }
 
     public static void fazerDeposito() {
