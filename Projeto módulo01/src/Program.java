@@ -21,7 +21,7 @@ public class Program {
 
 
         while (true) {
-            System.out.println("===== Jornada Bank =====");
+            System.out.println("\n===== Jornada Bank =====");
             System.out.println("#1 - Entrar");
             System.out.println("#2 - Cadastrar usuário");
             System.out.println("#3 - Sair do aplicativo");
@@ -47,6 +47,7 @@ public class Program {
     }
 
     public static void logar() {
+        userId = 0;
         Scanner input = new Scanner(System.in);
 
         System.out.print("Digite seu e-mail: ");
@@ -57,7 +58,7 @@ public class Program {
 
         if (numUsers > 1) {
             if (validaLogin(email, senha)) {
-               logado();
+                logado();
             }
         } else {
             System.out.println("Usuário inválido!");
@@ -85,22 +86,25 @@ public class Program {
         usuario[numUsers][1] = cpf;
         usuario[numUsers][2] = email;
         usuario[numUsers][3] = senha;
-        usuario[numUsers][4] = String.valueOf(new Random(0).nextInt(9999));
+        usuario[numUsers][4] = String.valueOf(new Random().nextInt(9999));
         usuario[numUsers][5] = "0";
         usuario[numUsers][6] = String.valueOf(numUsers);
         numUsers++;
 
-        System.out.println("Usuário cadastrado com sucesso!\n");
+        System.out.println("\nUsuário cadastrado com sucesso!");
     }
 
     public static boolean validaLogin(String email, String senha) {
         for (int i = 1; i < numUsers; i++) {
             if (usuario[i][2].equals(email) && usuario[i][3].equals(senha)) {
                 userId = i;
+                System.out.println("Bem vindo(a) ao seu Jornada Bank!!");
                 return true;
             }
         }
-        System.out.println(userId > 0 ? "Bem vindo!!" : "E-mail ou senha inválidos!!");
+        if (userId == 0) {
+            System.out.println("E-mail ou senha inválidos!!");
+        }
         return false;
     }
 
@@ -117,11 +121,14 @@ public class Program {
 
     public static void logado() {
         Scanner input = new Scanner(System.in);
-        System.out.println("===== Jornada Bank =====");
+        System.out.println("\n===== Jornada Bank =====");
+        System.out.println("Conta: " + usuario[userId][4] + "-" + usuario[userId][6] + "\nSaldo: R$ " + usuario[userId][5] + "\n");
         System.out.println("#1 - Fazer um depósito");
         System.out.println("#2 - Fazer um saque");
         System.out.println("#3 - Fazer uma transferência");
-        System.out.println("#4 - Sair");
+        System.out.println("#4 - Alterar cadastro");
+        System.out.println("#5 - Excluir usuário");
+        System.out.println("#6 - Sair");
         System.out.println("==========================");
         System.out.print("Qual opção você deseja acessar? ");
         int opcao = input.nextInt();
@@ -138,6 +145,12 @@ public class Program {
                 fazerTransferencia();
                 break;
             case 4:
+                alterarCadastro();
+                break;
+            case 5:
+                excluirUsuario();
+                break;
+            case 6:
                 System.out.println("Retornando a página de login!!");
                 return;
             default:
@@ -147,17 +160,16 @@ public class Program {
 
     private static void fazerDeposito() {
         Locale.setDefault(Locale.US);
-        System.out.println("Saldo inicial: R$ " + String.format("%.1f",Double.parseDouble(usuario[userId][5])));
+        System.out.println("Saldo inicial: R$ " + String.format("%.1f", Double.parseDouble(usuario[userId][5])));
         System.out.print("Digite o valor do deposito: R$ ");
         double valorDeposito = sc.nextDouble();
 
-        if(valorDeposito <= 0){
+        if (valorDeposito <= 0) {
             System.out.println("Valor inválido");
-        }
-        else {
+        } else {
             usuario[userId][5] = String.valueOf(Double.parseDouble(usuario[userId][5]) + valorDeposito);
             System.out.println("Depósitos realizado com sucesso.");
-            System.out.println("Saldo atual: R$ " + String.format("%.2f",Double.parseDouble(usuario[userId][5])));
+            System.out.println("Saldo atual: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][5])));
             System.out.println();
         }
         logado();
@@ -165,7 +177,7 @@ public class Program {
 
     public static void fazerSaque() {
         Locale.setDefault(Locale.US);
-        System.out.println("Saldo dispónivel em conta: R$ "+ String.format("%.2f",Double.parseDouble(usuario[userId][5])));
+        System.out.println("Saldo dispónivel em conta: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][5])));
         System.out.print("Quanto você quer sacar? R$ ");
         double valorSaque = sc.nextDouble();
 
@@ -177,37 +189,123 @@ public class Program {
             double novoSaldo = Double.parseDouble(usuario[userId][5]) - valorSaque;
             usuario[userId][5] = Double.toString(novoSaldo);
             System.out.println("Saque realizado com sucesso.");
-            System.out.println("Novo saldo siponível: R$ " + String.format("%.2f",Double.parseDouble(usuario[userId][5])));
+            System.out.println("Novo saldo siponível: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][5])));
             System.out.println();
         }
         logado();
     }
 
+    public static boolean confirmaTransferencia(int idUsuario) {
+        System.out.println("\n===== Jornada Bank =====");
+        System.out.println("Nome: " + usuario[idUsuario][0] + "\nConta: " + usuario[idUsuario][4] + "-" + usuario[idUsuario][6]);
+        System.out.println("1# - Confirmar");
+        System.out.println("2# - Cancelar");
+        System.out.println("==========================");
+        int option = sc.nextInt();
+        switch (option) {
+            case 1:
+                return true;
+            case 2:
+                return false;
+            default:
+                System.out.println("Opção inválida!!");
+                return false;
+        }
+    }
+
     public static void fazerTransferencia() {
         Locale.setDefault(Locale.US);
-        System.out.println("Saldo dispónivel em conta: R$ "+ String.format("%.2f",Double.parseDouble(usuario[userId][5])));
+        System.out.println("Saldo dispónivel em conta: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][5])));
         System.out.print("Qual é o valor da transferência? ");
         double valorTransferencia = sc.nextDouble();
-        System.out.print("Para qual Id você quer transferir?");
+        System.out.print("Para qual conta você quer transferir? ");
+        String conta = sc.next();
+        System.out.println("Digite o dígito único: ");
         String id = sc.next();
-        System.out.println(userId);
-        System.out.println(id);
 
-        if (valorTransferencia <= 0){
+
+        if (Double.parseDouble(usuario[userId][5]) <= 0) {
             System.out.println("Você não tem saldo suficiente para essa transferência. Saldo disponível: " + usuario[userId][5]);
         } else if (valorTransferencia > Double.parseDouble(usuario[userId][5])) {
             System.out.println("O valor selecionado é maior que o saldo disponível!");
+        } else if (valorTransferencia <= 0) {
+            System.out.println("Valor inválido, tente novamente!");
         } else {
-            double novoSaldo = Double.parseDouble(usuario[userId][5]) - valorTransferencia;
-            usuario[userId][5] = Double.toString(novoSaldo);
             for (int i = 0; i < numUsers; i++) {
-                if (usuario[i][6].equals(id)){
-                    double novoSaldoDestino = Double.parseDouble(usuario[i][5]) + valorTransferencia;
-                    usuario[i][5] = Double.toString(novoSaldoDestino);
-                    userId = i;
-
+                if (usuario[i][4].equals(conta) && usuario[i][6].equals(id)) {
+                    if (confirmaTransferencia(i)) {
+                        double novoSaldo = Double.parseDouble(usuario[userId][5]) - valorTransferencia;
+                        usuario[userId][5] = Double.toString(novoSaldo);
+                        double novoSaldoDestino = Double.parseDouble(usuario[i][5]) + valorTransferencia;
+                        usuario[i][5] = Double.toString(novoSaldoDestino);
+                        System.out.println("Transferência realizada com sucesso!");
+                    }
+                } else {
+                    if (i == numUsers - 1) {
+                        System.out.println("Conta não encontrada, tente novamente!");
+                    }
                 }
             }
         }
+        logado();
     }
+
+    public static void alterarCadastro() {
+        System.out.println("\n===== Jornada Bank =====");
+        System.out.println("1# - Alterar e-mail");
+        System.out.println("2# - Alterar senha");
+        System.out.println("3# - Cancelar");
+        System.out.println("==========================");
+        System.out.print("Qual opção você deseja acessar? ");
+        int input = sc.nextInt();
+
+        switch (input) {
+            case 1:
+                System.out.println("Digite seu novo e-mail: ");
+                String email = sc.next();
+                usuario[userId][2] = email;
+                System.out.println("E-mail alterado com sucesso!");
+                break;
+            case 2:
+                System.out.println("Digite sua nova senha: ");
+                String senha = sc.next();
+                usuario[userId][3] = senha;
+                System.out.println("Senha alterada com sucesso!");
+                break;
+            case 3:
+                return;
+            default:
+                System.out.println("Opção inválida!!");
+        }
+        logado();
+    }
+
+    public static void excluirUsuario() {
+        System.out.println("\n===== Jornada Bank =====");
+        System.out.println("Deseja mesmo excluir o usuário? ");
+        System.out.println("1# - Sim");
+        System.out.println("2# - Não");
+        System.out.println("==========================");
+        int input = sc.nextInt();
+
+        switch (input) {
+            case 1:
+                usuario[userId][0] = "";
+                usuario[userId][1] = "";
+                usuario[userId][2] = "";
+                usuario[userId][3] = "";
+                usuario[userId][4] = "";
+                usuario[userId][5] = "";
+                usuario[userId][6] = "";
+                System.out.println("Usuário deletado com sucesso!");
+                break;
+            case 2:
+                logado();
+                break;
+            default:
+                System.out.println("Opção inválida!!");
+        }
+    }
+
+
 }
