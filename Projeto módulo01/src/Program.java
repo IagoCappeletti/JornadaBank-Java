@@ -259,7 +259,7 @@ public class Program {
         logado();
     }
 
-    public static void reservaDeEmergencia(){
+    public static void reservaDeEmergencia() {
         Locale.setDefault(Locale.US);
         System.out.println("\n===== Jornada Bank =====");
         System.out.println("#1 - Depositar saldo de reservas de emergência");
@@ -271,7 +271,7 @@ public class Program {
 
         switch (input) {
             case 1:
-                System.out.println("Saldo dispónivel em conta: R$ "+ String.format("%.2f",Double.parseDouble(usuario[userId][5])));
+                System.out.println("Saldo dispónivel em conta: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][5])));
                 System.out.print("Qual valor você quer colocar na sua reserva de emergência? R$ ");
                 double valorCaixinha = sc.nextDouble();
 
@@ -280,27 +280,27 @@ public class Program {
                 } else if (valorCaixinha > Double.parseDouble(usuario[userId][5])) {
                     System.out.println("O valor selecionado é maior que o saldo disponível!\n");
                 } else {
-                        usuario[userId][5] = Double.toString(Double.parseDouble(usuario[userId][5]) - valorCaixinha);
-                        usuario[userId][7] = Double.toString(Double.parseDouble(usuario[userId][7]) + valorCaixinha);
-                        System.out.println("Reserva de Emergência criada com sucesso!\n");
+                    usuario[userId][5] = Double.toString(Double.parseDouble(usuario[userId][5]) - valorCaixinha);
+                    usuario[userId][7] = Double.toString(Double.parseDouble(usuario[userId][7]) + valorCaixinha);
+                    System.out.println("Reserva de Emergência criada com sucesso!\n");
                 }
                 break;
             case 2:
                 System.out.println("Saldo da reserva de Emergência: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][7])));
                 System.out.print("Qual valor você quer sacar da sua reserva de emergência? R$ ");
                 double valorDoSaqueCaixinha = sc.nextDouble();
-                if (valorDoSaqueCaixinha <= 0){
+                if (valorDoSaqueCaixinha <= 0) {
                     System.out.println("Valor inválido!\n");
                 } else if (valorDoSaqueCaixinha > Double.parseDouble(usuario[userId][7])) {
                     System.out.println("O valor selecionado é maior que o saldo disponível!\n");
-                }else {
-                        double updateSaldoCaixinha = Double.parseDouble(usuario[userId][7]) - valorDoSaqueCaixinha;
-                        usuario[userId][7] = Double.toString(updateSaldoCaixinha);
-                        double updateSaldoConta = Double.parseDouble(usuario[userId][5]) + valorDoSaqueCaixinha;
-                        usuario[userId][5] = Double.toString(updateSaldoConta);
-                        System.out.println("Saque da reserva de emergência efetuada com sucesso!\n");
-                        System.out.println("Novo saldo em conta: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][5])));
-                        System.out.println("Reserva de Emergência: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][7])));
+                } else {
+                    double updateSaldoCaixinha = Double.parseDouble(usuario[userId][7]) - valorDoSaqueCaixinha;
+                    usuario[userId][7] = Double.toString(updateSaldoCaixinha);
+                    double updateSaldoConta = Double.parseDouble(usuario[userId][5]) + valorDoSaqueCaixinha;
+                    usuario[userId][5] = Double.toString(updateSaldoConta);
+                    System.out.println("Saque da reserva de emergência efetuada com sucesso!\n");
+                    System.out.println("Novo saldo em conta: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][5])));
+                    System.out.println("Reserva de Emergência: R$ " + String.format("%.2f", Double.parseDouble(usuario[userId][7])));
                 }
                 break;
             case 3:
@@ -314,7 +314,9 @@ public class Program {
 
                 switch (input) {
                     case 1:
-                        usuario[userId][7] = "";
+                        double updateSaldoConta = Double.parseDouble(usuario[userId][5]) + Double.parseDouble(usuario[userId][7]);
+                        usuario[userId][5] = Double.toString(updateSaldoConta);
+                        usuario[userId][7] = "0";
                         System.out.println("Caixinha reservas de emergência deletada com sucesso!");
                         break;
                     case 2:
@@ -323,6 +325,8 @@ public class Program {
                     default:
                         System.out.println("Opção inválida!!");
                 }
+            default:
+                System.out.println("Opção inválida!!");
         }
         logado();
     }
