@@ -232,7 +232,6 @@ public class Program {
         System.out.println("Digite o dígito único: ");
         String id = sc.next();
 
-
         if (Double.parseDouble(usuario[userId][5]) <= 0) {
             System.out.println("Você não tem saldo suficiente para essa transferência. Saldo disponível: " + usuario[userId][5]);
         } else if (valorTransferencia > Double.parseDouble(usuario[userId][5])) {
